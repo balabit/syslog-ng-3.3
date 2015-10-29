@@ -612,10 +612,9 @@ afsocket_sd_init(LogPipe *s)
       self->reader_options.super.init_window_size /= self->max_connections;
       if (self->reader_options.super.init_window_size < 100)
         {
-          msg_warning("WARNING: window sizing for tcp sources were changed in syslog-ng 3.3, the configuration value was divided by the value of max-connections(). The result was too small, clamping to 100 entries. Ensure you have a proper log_fifo_size setting to avoid message loss.",
-                      evt_tag_int("orig_log_iw_size", self->reader_options.super.init_window_size),
-                      evt_tag_int("new_log_iw_size", 100),
-                      evt_tag_int("min_log_fifo_size", 100 * self->max_connections),
+          msg_warning("WARNING: window sizing for tcp sources was changed in syslog-ng 3.3. log_iw_size divided by max-connections must be greater than 100. Ensure you have a proper log_iw_size to avoid message loss.",
+                      evt_tag_int("orig_log_iw_size", self->reader_options.super.init_window_size * self->max_connections),
+                      evt_tag_int("min_log_iw_size", 100 * self->max_connections),
                       NULL);
           self->reader_options.super.init_window_size = 100;
         }
